@@ -1,0 +1,343 @@
+<!DOCTYPE html5>
+<html>
+<body onload='initProgressBar(); document.getElementById("vol_div").style.display = "none"; isShown=false'>
+<title>Video Viewer</title>
+<script>
+var bar, slider, w=0;
+
+function initProgressBar() {
+v1 = document.getElementById('video1');
+pp = document.getElementById('pp');
+
+setInterval(readout, 30);
+
+bar = document.getElementById('bar');
+slider = document.getElementById('slider');
+bar.addEventListener('mousedown', startSlide, false);	
+bar.addEventListener('mouseup', stopSlide, false);
+}
+ 
+function startSlide(event) {
+var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
+bar.addEventListener('mousemove', moveSlide, false);	
+set_ct = v1.currentTime;
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;
+document.getElementById('disc').style.left = set_w - 12;
+}
+ 
+function moveSlide(event) {
+var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;
+document.getElementById('disc').style.left = set_w - 12;
+}
+
+function stopSlide(event) {
+var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
+bar.removeEventListener('mousemove', moveSlide, false);
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;
+document.getElementById('disc').style.left = set_w - 12;
+}
+
+function readout() {
+var ct = v1.currentTime, tt = v1.duration, ct_readout='', tt_readout='';
+w = ct/tt * 680;
+
+if(ct > 59.999999) ct_readout = '' + Math.floor(ct / 60) + ':';
+if(ct > 59 && ct % 60 < 10) ct_readout += '0';
+ct_readout += Math.floor(ct % 60);
+
+if(tt > 59) tt_readout = '' + Math.floor(tt / 60) + ':';
+if(tt > 59 && tt % 60 < 10) tt_readout += '0';
+tt_readout += Math.floor(tt % 60);
+
+slider.style.width = w;
+disc.style.left = w - 12;
+
+bothTimesWhole.style.marginRight="60px";
+if(ct <= tt)
+  document.getElementById('bothTimesWhole').innerHTML='' + ct_readout + ' / ' + tt_readout;
+}
+
+v1 = document.getElementById('video1');
+pp = document.getElementById('pp');
+var isShown = new Boolean();
+
+function halt() { 
+v1.currentTime=0;
+v1.pause();
+pp.style.paddingLeft="0px"
+pp.style.top="0px";
+pp.style.fontSize="15pt";
+pp.innerHTML="&#9658;";
+}
+
+function play_pause() { 
+  if (v1.paused) {
+    v1.play();
+    pp.style.paddingLeft="2px"
+    pp.style.top="-4px";
+    pp.style.fontSize="9pt";
+    pp.innerHTML="&#9612;&#9612;";
+  } 
+  else {
+    v1.pause();
+    pp.style.paddingLeft="0px"
+    pp.style.top="0px";
+    pp.style.fontSize="15pt";
+    pp.innerHTML="&#9658;";
+  } 
+}
+
+function show_hide_vol() {
+if(isShown) { document.getElementById("vol_div").style.display = "none"; isShown = false; }
+else { document.getElementById("vol_div").style.display="inherit"; isShown = true; }
+}
+
+var v1, pp;
+var titleArr = [], pathArr = [], s=0, n=0;
+
+function showHilite(idnum){   
+var flist2 = document.getElementById("fileList");
+var idn = idnum;
+
+var prev = flist2.childNodes[s];
+prev.style.backgroundColor='';
+prev.style.color='';
+
+var active = flist2.childNodes[idn];
+active.style.backgroundColor='blue';
+active.style.color='white';
+
+v1.src = pathArr[idn];
+document.getElementById("showing").innerHTML = titleArr[idn];
+
+        return idn;
+}
+
+function makeFileList() {
+var input = document.getElementById("filesToUpload");
+var flist = document.getElementById("fileList");
+var first = flist.childNodes[s];
+var video1 = document.getElementById("video1");
+
+video1.poster="";
+
+if(n > 0) {
+first.style.backgroundColor='';
+first.style.color='';
+s=n;
+}
+else flist.innerHTML='';
+
+for(var i = 0; i < input.files.length; i++) {
+  var fname=input.files[i].name;
+  var samplepos=fname.lastIndexOf('.');
+  var ext = fname.substr(samplepos);
+  if(ext=='.mp4' || ext=='.webm' || ext=='.ogv') {
+    var div = document.createElement("div");
+    var str = '<div id="' + n + '" class="ptr" onclick="s = showHilite(this.id)">&#149;&nbsp; ' + fname + '</div>';
+    div.innerHTML = str;
+    flist.appendChild(div);
+    
+    var fn = fname.substr(0,samplepos);
+    titleArr[n] = fn;
+
+    var oBlob = URL.createObjectURL(event.target.files[i]);
+    pathArr.push(oBlob);
+
+    n++
+    }
+}
+first = flist.childNodes[s];
+first.style.backgroundColor='green';
+first.style.color='white';
+
+v1.src = pathArr[s];
+document.getElementById('showing').innerHTML = titleArr[s];
+}
+</script>
+
+<style>
+#redo {position:relative;top:5px}
+#fileList {width:265px; height:400px; overflow-x:hidden; overflow-y:auto}
+#showing {font-size:20px; cursor:default}
+#video1 {max-width:720px; max-height:400px}
+.fs {position:relative; top:8px; float:right}
+.ptr:hover {background-color:CornflowerBlue; color:white; cursor:pointer}
+.narr {width:265px}
+.video_holder {
+background-color:gray;
+border:solid black 1px;
+position:absolute; left:280px; top:10px;  
+text-align:center;
+width:720px;
+}
+
+#bar {
+    background-color:white;
+    border:1px solid black;
+    position:relative;
+    width:680px; height:11px;
+    border-radius: 13px;
+    margin-left:18px;
+    margin-top:5px;
+}
+
+#slider {
+	background-color:lime;
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:0px;
+	height:100%;
+    border-radius: 10px;
+}
+
+#disc {
+	position:absolute;
+	width:20px;
+	height:20px;
+	top:-4px;
+	left:-10px;
+    background-image:url('https://lh3.googleusercontent.com/-RGZnjDrICzA/VPeADKsbRjI/AAAAAAAAAEE/jLP6zDCDnFc/s512/smiley_red.png');
+    background-size:20px 20px;
+    background-repeat:no-repeat;
+    background-position:0px 0px;
+}
+
+#controls {
+    background-color:blue;
+    color:white;
+    text-align:center;
+    width:720px;
+}
+
+ul {list-style:none; padding-left:0}
+.narr {width:265px}
+.tdata {color:white; cursor:default; width:140px}
+.disp {
+display:inline;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.ptr {cursor:default}
+
+#st {position:relative; top:-1px; font-size:17pt}
+#pp {position:relative; top:0px; font-size:15pt }
+#sf {position:relative; top:-1px; font-size:13pt}
+#sb {position:relative; top:-1px; font-size:13pt}
+#sp {position:relative; top:5px}
+
+#vol_div {
+position:absolute;
+left:-55px;
+top:-85px;
+background-color:lightblue;
+width:0px;
+}
+
+.rotateLeft {
+-ms-transform: rotate(-90deg);
+-webkit-transform: rotate(-90deg);
+transform: rotate(-90deg);
+}
+
+</style>
+
+<div class="narr">
+<span id="video-fullscreen" class="fs" onclick="this.blur()">
+  <img src="https://lh6.googleusercontent.com/-Yxj9RATRXi0/VPeACECCDpI/AAAAAAAAAEg/ykbss53Y1xU/s19/full-screen-black.png" height='20'/>&nbsp;</span>
+<span id="redo" onclick="window.location.reload()">
+  <img src='https://lh6.googleusercontent.com/-onoEy8xZ42U/VPeACtRMpRI/AAAAAAAAADw/0gHSUkQVQp8/s20/refresh-icon-black.png' height='24px' /></span>&nbsp;
+<input type="file" id="filesToUpload" multiple accept="video/*" style="display:none" onChange="makeFileList()" />
+  <button onClick="filesToUpload.click()">Select Videos</button>
+  <hr>
+  <div id="fileList" class="lst">
+    Click <code>Select Videos.</code><br>
+    Navigate to any folder.<br>
+    Select a video file or files.<br>
+    Click <code>Open.</code><br><br>
+  </div>
+  <hr>
+</div>
+<div class="video_holder">
+  <video id="video1" poster="Video Poster.png" src="Vids/Logo - Video.mp4" onclick="play_pause()" onended="halt()"></video>
+  <div style="background-color:blue; border-top:solid black 1px">
+    <div id='bar'>
+      <div id='slider'></div>
+      <div id='disc'></div>
+    </div>
+  </div>
+  <table id="controls">
+    <tr>
+      <td id="bothTimesWhole" class="tdata"></td>
+      <td id="showing" align="center">Jammin HTML5 Video</td>
+      <td class="tdata" valign="top">
+        <div id="menu" style='height:30px'>
+          <li id="st" class="disp" onclick="this.blur();halt()">&#8718;&nbsp;</li>
+          <li id="pp" class="disp" onclick="this.blur();play_pause()">&#9658;</li>
+          <li id="sf" class="disp" onclick="this.blur();video1.currentTime -= 0.03;">&#10703;</li>
+          <li id="sb" class="disp" onclick="this.blur();video1.currentTime += 0.03;">&#10704;&nbsp;</li>
+          <li id="sp" class="disp" onclick="this.blur(); show_hide_vol()">
+            <div id="vol_div">
+              <input class="rotateLeft" type="range" min="0" max="100" step="1" value="100" onchange="video1.volume = this.value * 0.01" />
+            </div>
+            <img src="https://lh5.googleusercontent.com/-7UAEJHjZktA/VPeADO6pquI/AAAAAAAAAEI/XSYsJKEkL4I/s512/volume-full-icon-64.png" height="24"/>&nbsp;
+          </li>
+        </div> 
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script>
+(function () {
+    var marioVideo = document.getElementById("video1")
+        videoFullscreen = document.getElementById("video-fullscreen");
+
+    if (marioVideo && videoFullscreen) {
+        videoFullscreen.addEventListener("click", function (evt) {
+            if (marioVideo.requestFullscreen) {
+                marioVideo.requestFullscreen();
+            }
+            else if (marioVideo.msRequestFullscreen) {
+                marioVideo.msRequestFullscreen();
+            }
+            else if (marioVideo.mozRequestFullScreen) {
+                marioVideo.mozRequestFullScreen();
+            }
+            else if (marioVideo.webkitRequestFullScreen) {
+                marioVideo.webkitRequestFullScreen();
+            }
+        }, false);
+    }
+    var cancelFullScreen = document.getElementById("cancel-fullscreen");
+    if (cancelFullScreen) {
+        cancelFullScreen.addEventListener("click", function () {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            }
+            else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        }, false);
+    }
+
+})();
+</script>
+</body>
+</html>
