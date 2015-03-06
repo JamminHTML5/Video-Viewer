@@ -269,7 +269,7 @@ transform: rotate(-90deg);
   <hr>
 </div>
 <div class="video_holder">
-  <video id="video1" poster="https://lh6.googleusercontent.com/-6UiFEnxqEI8/VPjEiva7T3I/AAAAAAAAAFc/QkxuSlDMI4o/s640/Video%2520Poster.png" src="" onclick="play_pause()" onended="halt()">
+  <video id="video1" poster="https://lh3.googleusercontent.com/-KgM1xx0CWec/VPnHo5wmuvI/AAAAAAAAAGw/TYPRNeP3iaM/s640/Video%2520Poster%2520-%2520Wix.png" src="" onclick="play_pause()" onended="halt()">
  </video>
   <div style="background-color:blue; border-top:solid black 1px">
     <div id='bar'>
