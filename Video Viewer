@@ -112,8 +112,6 @@ var active = flist2.childNodes[idn];
 active.style.backgroundColor='blue';
 active.style.color='white';
 
-// Snapshot, too!!!!!!!!!!!!!!!!!
-
 pp.style.fontSize="15pt";
 pp.style.top="0px";
 pp.innerHTML="&#9658;";
@@ -130,8 +128,6 @@ var first = flist.childNodes[s];
 var video1 = document.getElementById("video1");
 
 video1.poster="";
-
-// Snapshot, too!!!!!!!!!!!!!!!!!
 
 pp.style.fontSize="15pt";
 pp.style.top="0px";
