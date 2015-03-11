@@ -268,7 +268,7 @@ document.getElementById('showing').innerHTML = titleArr[s];
   <hr>
 </div>
 <div class="video_holder">
-  <video id="video1" poster="https://lh6.googleusercontent.com/-6UiFEnxqEI8/VPjEiva7T3I/AAAAAAAAAFc/QkxuSlDMI4o/s640/Video%2520Poster.png" src="" onclick="play_pause()" onended="halt()"></video>
+  <video id="video1" poster="https://lh6.googleusercontent.com/-g5Z67RgWwAk/VP9fsTWVewI/AAAAAAAAALw/j1bv4aLzfRA/s720/Video%2520Viewer%2520-%2520Grad.png" src="" onclick="play_pause()" onended="halt()"></video>
   <div style="background-color:blue; border-top:solid black 1px">
     <div id='bar'>
       <div id='slider'></div>
