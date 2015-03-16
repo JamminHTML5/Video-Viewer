@@ -70,26 +70,17 @@ if(ct <= tt)
 function halt() { 
 video1.currentTime=0;
 video1.pause();
-pp.style.paddingLeft="0px"
-pp.style.top="0px";
-pp.style.fontSize="15pt";
-pp.innerHTML="&#9658;";
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png"
 }
 
 function play_pause() { 
   if (video1.paused) {
     video1.play();
-    pp.style.paddingLeft="2px"
-    pp.style.top="-4px";
-    pp.style.fontSize="9pt";
-    pp.innerHTML="&#9612;&#9612;";
+    pp.src="https://lh6.googleusercontent.com/-NJHb-5Oj0zs/VQLsZb3CaeI/AAAAAAAAAMc/W0uyQvEZ83E/s73/Pause.png";
   } 
   else {
     video1.pause();
-    pp.style.paddingLeft="0px"
-    pp.style.top="0px";
-    pp.style.fontSize="15pt";
-    pp.innerHTML="&#9658;";
+    pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
   } 
 }
 
@@ -112,9 +103,7 @@ var active = flist2.childNodes[idn];
 active.style.backgroundColor='blue';
 active.style.color='white';
 
-pp.style.fontSize="15pt";
-pp.style.top="0px";
-pp.innerHTML="&#9658;";
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
 video1.src = pathArr[idn];
 document.getElementById("showing").innerHTML = titleArr[idn];
 
@@ -129,9 +118,7 @@ var video1 = document.getElementById("video1");
 
 video1.poster="";
 
-pp.style.fontSize="15pt";
-pp.style.top="0px";
-pp.innerHTML="&#9658;";
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
 
 if(n > 0) {
 first.style.backgroundColor='';
@@ -229,12 +216,22 @@ document.getElementById('showing').innerHTML = titleArr[s];
 .narr {width:265px}
 .tdata {color:white; cursor:default; width:140px}
 .ptr {cursor:default}
+.noselect {                           /* Prevent selection hilight */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
-#st {position:relative; top:-1px; font-size:17pt}
-#pp {position:relative; top:0px; font-size:15pt; width:22px}
-#sf {position:relative; top:-1px; font-size:13pt}
-#sb {position:relative; top:-1px; font-size:13pt}
-#sp {position:relative; top:5px}
+#menu {height:30px}
+
+#st {font-size:17pt}
+#pp {position:relative; top:7px}
+#sf {font-size:13pt}
+#sb {font-size:13pt}
+#sp {position:relative; top:7px}
 
 #vol_div {
     position:absolute;
@@ -268,7 +265,7 @@ document.getElementById('showing').innerHTML = titleArr[s];
   <hr>
 </div>
 <div class="video_holder">
-  <video id="video1" poster="https://lh6.googleusercontent.com/-g5Z67RgWwAk/VP9fsTWVewI/AAAAAAAAALw/j1bv4aLzfRA/s720/Video%2520Viewer%2520-%2520Grad.png" src="" onclick="play_pause()" onended="halt()"></video>
+  <video id="video1" poster="https://lh6.googleusercontent.com/-6UiFEnxqEI8/VPjEiva7T3I/AAAAAAAAAFc/QkxuSlDMI4o/s720/Video%2520Poster.png" src="" onclick="play_pause()" onended="halt()"></video>
   <div style="background-color:blue; border-top:solid black 1px">
     <div id='bar'>
       <div id='slider'></div>
@@ -280,9 +277,9 @@ document.getElementById('showing').innerHTML = titleArr[s];
       <td id="bothTimesWhole" class="tdata"></td>
       <td id="showing" align="center">Jammin HTML5 Video</td>
       <td class="tdata" valign="top">
-        <div id="menu" style='height:30px'>
+        <div id="menu" class="noselect">
           <span id="st" onclick="this.blur();halt()">&#8718;&nbsp;</span>
-          <span id="pp" onclick="this.blur();play_pause()">&#9658;</span>
+          <span onclick="this.blur();play_pause()"><img id="pp" src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png" width="24px" /></span>
           <span id="sf" onclick="this.blur();video1.currentTime -= 0.03;">&#10703;</span>
           <span id="sb" onclick="this.blur();video1.currentTime += 0.03;">&#10704;&nbsp;</span>
           <span id="sp" onclick="this.blur(); show_hide_vol()">
