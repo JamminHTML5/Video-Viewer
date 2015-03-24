@@ -1,17 +1,22 @@
 <!DOCTYPE html5>
 <html>
-<body onload='initProgressBar()'>
+<body onload='isShown=initProgram()'>
 <title>Video Viewer</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="jamminhtml5,video,viewer,html5,playlist">
 <script>
+
+// NOTE: Play & Pause are images because the unicode characters can't be sized to the same width!!!!!
+
+// Progress Bar - 720
+
 var bar, slider, w=0;
-var isShown = new Boolean();
 
-function initProgressBar() {
-document.getElementById("vol_div").style.display = "none";
-isShown=false;
-
-video1 = document.getElementById('video1');
+function initProgram() {
+v1 = document.getElementById('video1');
 pp = document.getElementById('pp');
+
+document.getElementById("vol_div").style.display = "none";
 
 setInterval(readout, 30);
 
@@ -19,37 +24,39 @@ bar = document.getElementById('bar');
 slider = document.getElementById('slider');
 bar.addEventListener('mousedown', startSlide, false);	
 bar.addEventListener('mouseup', stopSlide, false);
+
+        return false;
 }
  
 function startSlide(event) {
 var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
 bar.addEventListener('mousemove', moveSlide, false);	
-set_ct = video1.currentTime;
-set_tt = video1.duration;
-video1.currentTime = set_w/680 * set_tt;
+set_ct = v1.currentTime;
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;  // Set currentTime, & the green bar will go to it.
 document.getElementById('disc').style.left = set_w - 12;
 }
  
 function moveSlide(event) {
 var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
-set_tt = video1.duration;
-video1.currentTime = set_w/680 * set_tt;
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;  // Set currentTime, & the green bar will go to it.
 document.getElementById('disc').style.left = set_w - 12;
 }
 
 function stopSlide(event) {
 var set_w = event.clientX - bar.offsetLeft.toFixed(0) - 280;
 bar.removeEventListener('mousemove', moveSlide, false);
-set_tt = video1.duration;
-video1.currentTime = set_w/680 * set_tt;
+set_tt = v1.duration;
+v1.currentTime = set_w/680 * set_tt;  // Set currentTime, & the green bar will go to it.
 document.getElementById('disc').style.left = set_w - 12;
 }
 
 function readout() {
-var ct = video1.currentTime, tt = video1.duration, ct_readout='', tt_readout='';
+var ct = v1.currentTime, tt = v1.duration, ct_readout='', tt_readout='';
 w = ct/tt * 680;
 
-if(ct > 59.999999) ct_readout = '' + Math.floor(ct / 60) + ':';
+if(ct > 59.999999) ct_readout = '' + Math.floor(ct / 60) + ':'; // 59.000001 to 59.999999
 if(ct > 59 && ct % 60 < 10) ct_readout += '0';
 ct_readout += Math.floor(ct % 60);
 
@@ -61,25 +68,31 @@ slider.style.width = w;
 disc.style.left = w - 12;
 
 bothTimesWhole.style.marginRight="60px";
-if(ct <= tt)
+if(ct <= tt)  // Without the if, NAN shows briefly, & the right side of the cell jumps.
   document.getElementById('bothTimesWhole').innerHTML='' + ct_readout + ' / ' + tt_readout;
 }
 
-// Video Viewer
+// Player Controls
 
+v1 = document.getElementById('video1');
+pp = document.getElementById('pp');
+var isShown = new Boolean();  // Volume Slider
+//play font-size:16pt
 function halt() { 
-video1.currentTime=0;
-video1.pause();
-pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png"
+v1.currentTime=0;
+v1.pause();
+pp.style.top="0px";
+pp.style.fontSize="15pt";
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
 }
 
 function play_pause() { 
-  if (video1.paused) {
-    video1.play();
+  if (v1.paused) {  // paused is a Boolean
+    v1.play();
     pp.src="https://lh6.googleusercontent.com/-NJHb-5Oj0zs/VQLsZb3CaeI/AAAAAAAAAMc/W0uyQvEZ83E/s73/Pause.png";
   } 
   else {
-    video1.pause();
+    v1.pause();  // pause is a command (no d)
     pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
   } 
 }
@@ -89,6 +102,9 @@ if(isShown) { document.getElementById("vol_div").style.display = "none"; isShown
 else { document.getElementById("vol_div").style.display="inherit"; isShown = true; }
 }
 
+// Video Viewer
+
+var v1, pp;
 var titleArr = [], pathArr = [], s=0, n=0;
 
 function showHilite(idnum){   
@@ -103,38 +119,31 @@ var active = flist2.childNodes[idn];
 active.style.backgroundColor='blue';
 active.style.color='white';
 
-pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
-video1.src = pathArr[idn];
+v1.src = pathArr[idn];
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png"
+
 document.getElementById("showing").innerHTML = titleArr[idn];
 
         return idn;
-}
+}   // End function
 
 function makeFileList() {
 var input = document.getElementById("filesToUpload");
 var flist = document.getElementById("fileList");
 var first = flist.childNodes[s];
-var video1 = document.getElementById("video1");
-
-video1.poster="";
-
-pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png";
 
 if(n > 0) {
 first.style.backgroundColor='';
 first.style.color='';
-s=n;
+s=n;  // start=number;
 }
-else flist.innerHTML='';
+else flist.innerHTML='';  // Load or Refresh zeroes n.
 
 for(var i = 0; i < input.files.length; i++) {
   var fname=input.files[i].name;
   var samplepos=fname.lastIndexOf('.');
   var ext = fname.substr(samplepos);
   if(ext=='.mp4' || ext=='.webm' || ext=='.ogv') {
-  
-    
-  
     var div = document.createElement("div");
     var str = '<div id="' + n + '" class="ptr" onclick="s = showHilite(this.id)">&#149;&nbsp; ' + fname + '</div>';
     div.innerHTML = str;
@@ -145,40 +154,43 @@ for(var i = 0; i < input.files.length; i++) {
 
     var oBlob = URL.createObjectURL(event.target.files[i]);
     pathArr.push(oBlob);
+    
+    video1.poster='';
 
     n++
-    }
-}
-first = flist.childNodes[s];
+    }  // End if
+}      // End for
+first = flist.childNodes[s];    // Hilite the first appended list item!
 first.style.backgroundColor='green';
 first.style.color='white';
 
-video1.src = pathArr[s];
+v1.src = pathArr[s];
+pp.src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png"
 document.getElementById('showing').innerHTML = titleArr[s];
-}
+}      // End function
 </script>
 
 <style>
 #redo {position:relative;top:5px}
-#fileList {width:265px; height:400px; overflow-x:hidden; overflow-y:auto}
+#fileList {width:265px; height:403px; overflow-x:hidden; overflow-y:auto}
 #showing {font-size:20px; cursor:default}
-#video1 {max-width:720px; max-height:400px}
-.fs {position:relative; top:8px; float:right}  /* Full Screen Icon */
+#video1 {max-width:720px; max-height:400px} /* 450px for IE */
+.fs {position:relative; top:8px; float:right}
 .ptr:hover {background-color:CornflowerBlue; color:white; cursor:pointer}
 .narr {width:265px}
 .video_holder {
-    background-color:gray;
-    border:solid black 1px;
-    position:absolute; left:280px; top:10px;  
-    text-align:center;
-    width:720px;
+background-color:gray;
+border:solid black 1px;
+position:absolute; left:280px; top:10px;  
+text-align:center;
+width:720px;
 }
 
 #bar {
     background-color:white;
     border:1px solid black;
     position:relative;
-    width:680px; height:11px;
+    width:680px; height:11px;  /* Set at 680 for 720px */
     border-radius: 13px;
     margin-left:18px;
     margin-top:5px;
@@ -191,12 +203,12 @@ document.getElementById('showing').innerHTML = titleArr[s];
 	left:0px;
 	width:0px;
 	height:100%;
-    border-radius: 10px;
+    border-radius: 10px;       /* inner div height / 2 + padding */
 }
 
 #disc {
 	position:absolute;
-	width:20px;
+	width:20px;                /* Set at 680 720px */
 	height:20px;
 	top:-4px;
 	left:-10px;
@@ -213,10 +225,11 @@ document.getElementById('showing').innerHTML = titleArr[s];
     width:720px;
 }
 
+ul {list-style:none; padding-left:0}
 .narr {width:265px}
 .tdata {color:white; cursor:default; width:140px}
-.ptr {cursor:default}
-.noselect {                           /* Prevent selection hilight */
+.disp {
+display:inline;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -225,34 +238,36 @@ document.getElementById('showing').innerHTML = titleArr[s];
     user-select: none;
 }
 
-#menu {height:30px}
+.ptr {cursor:default}
 
-#st {font-size:17pt}
-#pp {position:relative; top:7px}
-#sf {font-size:13pt}
-#sb {font-size:13pt}
-#sp {position:relative; top:7px}
+#st {position:relative; top:-8px; font-size:17pt}
+/* #pp {position:relative; top:0px; font-size:15pt } */
+#sf {position:relative; top:-7px; font-size:13pt}
+#sb {position:relative; top:-7px; font-size:13pt}
+#sp {position:relative; top:-2px}
 
 #vol_div {
-    position:absolute;
-    left:-55px;
-    top:-85px;
-    background-color:lightblue;
-    width:0px;
+position:absolute;
+left:-55px;
+top:-85px;
+background-color:lightblue;
+width:0px;
 }
 
 .rotateLeft {
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
+-ms-transform: rotate(-90deg); /* IE 9 */
+-webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+transform: rotate(-90deg);
 }
+
 </style>
 
 <div class="narr">
 <span id="video-fullscreen" class="fs" onclick="this.blur()">
   <img src="https://lh6.googleusercontent.com/-Yxj9RATRXi0/VPeACECCDpI/AAAAAAAAAEg/ykbss53Y1xU/s19/full-screen-black.png" height='20'/>&nbsp;</span>
+
 <span id="redo" onclick="window.location.reload()">
-  <img src='https://lh6.googleusercontent.com/-onoEy8xZ42U/VPeACtRMpRI/AAAAAAAAADw/0gHSUkQVQp8/s20/refresh-icon-black.png' height='24px' /></span>&nbsp;
+  <img src='https://lh6.googleusercontent.com/-onoEy8xZ42U/VPeACtRMpRI/AAAAAAAAADw/0gHSUkQVQp8/s20/refresh-icon-black.png' height='22px' /></span>&nbsp;
 <input type="file" id="filesToUpload" multiple accept="video/*" style="display:none" onChange="makeFileList()" />
   <button onClick="filesToUpload.click()">Select Videos</button>
   <hr>
@@ -277,17 +292,16 @@ document.getElementById('showing').innerHTML = titleArr[s];
       <td id="bothTimesWhole" class="tdata"></td>
       <td id="showing" align="center">Jammin HTML5 Video</td>
       <td class="tdata" valign="top">
-        <div id="menu" class="noselect">
-          <span id="st" onclick="this.blur();halt()">&#8718;&nbsp;</span>
-          <span onclick="this.blur();play_pause()"><img id="pp" src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png" width="24px" /></span>
-          <span id="sf" onclick="this.blur();video1.currentTime -= 0.03;">&#10703;</span>
-          <span id="sb" onclick="this.blur();video1.currentTime += 0.03;">&#10704;&nbsp;</span>
-          <span id="sp" onclick="this.blur(); show_hide_vol()">
-            <div id="vol_div">
-              <input class="rotateLeft" type="range" min="0" max="100" step="1" value="100" onchange="video1.volume = this.value * 0.01" />
-            </div>
-            <img src="https://lh5.googleusercontent.com/-7UAEJHjZktA/VPeADO6pquI/AAAAAAAAAEI/XSYsJKEkL4I/s512/volume-full-icon-64.png" height="24"/>&nbsp;
-          </span>
+        <div id="menu" style='height:30px'>
+          <li id="st" class="disp" onclick="this.blur();halt()">&#8718;&nbsp;</li>
+          <li class="disp" onclick="this.blur();play_pause()"><img id="pp" src="https://lh5.googleusercontent.com/-IIiZ8hWrv1k/VQLsZXTdRHI/AAAAAAAAAMc/bvEYTcnk5XA/s73/Play.png" height="28"/></li>
+          <li id="sf" class="disp" onclick="this.blur();video1.currentTime -= 0.03;">&#10703;</li>
+          <li id="sb" class="disp" onclick="this.blur();video1.currentTime += 0.03;">&#10704;&nbsp;</li>
+          <li id="sp" class="disp" onclick="this.blur(); show_hide_vol()">
+          <div id="vol_div">
+            <input class="rotateLeft" type="range" min="0" max="100" step="1" value="100" onchange="video1.volume = this.value * 0.01" />
+          </div>
+          <img src="https://lh5.googleusercontent.com/-7UAEJHjZktA/VPeADO6pquI/AAAAAAAAAEI/XSYsJKEkL4I/s512/volume-full-icon.png" height="22px"/>&nbsp;</li>
         </div> 
       </td>
     </tr>
